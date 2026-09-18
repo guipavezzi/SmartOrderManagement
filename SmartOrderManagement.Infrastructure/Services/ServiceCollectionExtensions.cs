@@ -9,19 +9,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var dbDirectory = Path.Combine(appDataPath, "SmartOrderManagement");
-        
-        if (!Directory.Exists(dbDirectory))
-        {
-            Directory.CreateDirectory(dbDirectory);
-        }
-
-        var dbPath = Path.Combine(dbDirectory, "smartordermanagement.db");
-        var connectionString = $"Data Source={dbPath}";
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<SmartOrderManagementDbContext>(options =>
-            options.UseSqlite(connectionString));
+            options.UseNpgsql(connectionString));
 
         return services;
     }

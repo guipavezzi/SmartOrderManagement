@@ -12,4 +12,7 @@ public class Order
     public Status Status { get; set; } = Status.InPreparation;
     public string Observation { get; set; }
     public string? ShiftReference { get; set; }
+
+    public Guid CompanyId { get; set; }
+    public Company Company { get; set; }
 }

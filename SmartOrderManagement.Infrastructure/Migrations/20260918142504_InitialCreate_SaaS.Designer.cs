@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartOrderManagement.Infrastructure.Data.Context;
@@ -11,9 +12,11 @@ using SmartOrderManagement.Infrastructure.Data.Context;
 namespace SmartOrderManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartOrderManagementDbContext))]
-    partial class SmartOrderManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260918142504_InitialCreate_SaaS")]
+    partial class InitialCreate_SaaS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
