@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SmartOrderManagement.Application.Dtos;
 using SmartOrderManagement.Domain.Enums;
 
+[Authorize]
 [ApiController]
 [Route("api/[Controller]")]
 public class OrderController : Controller

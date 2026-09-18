@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartOrderManagement.Application.Dtos;
 
+[Authorize]
 [ApiController]
 [Route("api/[Controller]")]
 public class MenuController : Controller
