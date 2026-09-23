@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using SmartOrderManagement.Application.Dtos;
+using SmartOrderManagement.Application.Interfaces;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Domain.Interfaces.Repositories;
 
@@ -8,11 +9,13 @@ public class MenuService : IMenuService
 {
     private readonly IMenuRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ICurrentUserService _currentUserService;
 
-    public MenuService(IMenuRepository repository, IMapper mapper)
+    public MenuService(IMenuRepository repository, IMapper mapper, ICurrentUserService currentUserService)
     {
         _repository = repository;
         _mapper = mapper;
+        _currentUserService = currentUserService;
     }
 
     public async Task<MenuResponse> CreateMenuAsync(CreateMenuRequest request)
@@ -21,7 +24,8 @@ public class MenuService : IMenuService
         {
             Name = request.Name,
             MinPreparationTimeInMinutes = request.MinPreparationTimeInMinutes,
-            MaxPreparationTimeInMinutes = request.MaxPreparationTimeInMinutes
+            MaxPreparationTimeInMinutes = request.MaxPreparationTimeInMinutes,
+            CompanyId = _currentUserService.CompanyId // Vincula o menu à empresa do usuário logado
         };
         await _repository.AddAsync(menu);
         return _mapper.Map<MenuResponse>(menu);

@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return await _context.Users.IgnoreQueryFilters().FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
@@ -34,8 +34,7 @@ public class UserRepository : IUserRepository
     public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
     {
         return await _context.RefreshTokens
-            .Include(rt => rt.User)
-            .FirstOrDefaultAsync(rt => rt.Token == token);
+            .Include(rt => rt.User).IgnoreQueryFilters().FirstOrDefaultAsync(rt => rt.Token == token);
     }
 
     public async Task SaveRefreshTokenAsync(RefreshToken refreshToken)
@@ -54,3 +53,5 @@ public class UserRepository : IUserRepository
         }
     }
 }
+
+

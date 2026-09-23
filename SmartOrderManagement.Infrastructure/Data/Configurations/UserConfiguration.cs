@@ -32,12 +32,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .IsRequired();
 
         builder.Property(x => x.CreatedAt)
-        .HasColumnType("timestamp")
+        .HasColumnType("timestamp with time zone")
         .IsRequired()
         .HasColumnName("created_at");
 
         builder.Property(x => x.UpdatedAt)
-        .HasColumnType("timestamp")
+        .HasColumnType("timestamp with time zone")
         .IsRequired()
         .HasColumnName("updated_at");
     }

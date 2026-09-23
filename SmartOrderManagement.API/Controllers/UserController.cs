@@ -19,20 +19,6 @@ public class UserController : ControllerBase
         _currentUserService = currentUserService;
     }
 
-    [HttpPost("register")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        var response = await _userService.RegisterAsync(request);
-        if (response == null)
-        {
-            return BadRequest(new { Message = "Email already in use or registration failed." });
-        }
-
-        return Created("", response);
-    }
 
     [HttpPost("login")]
     [AllowAnonymous]
@@ -62,6 +48,30 @@ public class UserController : ControllerBase
         }
 
         return Ok(response);
+    }
+
+    [HttpPost]
+    [Authorize] // Requires authentication to get the CompanyId from the JWT
+    public async Task<IActionResult> CreateUser([FromBody] SmartOrderManagement.Application.DTOs.User.CreateUserRequestDto request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        // Get the CompanyId from the currently logged in user (the Admin creating the employee)
+        var companyId = _currentUserService.CompanyId;
+
+        // Optionally check if the current user is an Admin
+        if (_currentUserService.Role != SmartOrderManagement.Domain.Enums.UserRole.Admin)
+        {
+            return Forbid();
+        }
+
+        var success = await _userService.CreateUserAsync(request, companyId);
+        if (!success)
+        {
+            return BadRequest(new { Message = "Email already in use." });
+        }
+
+        return Created("", new { Message = "User created successfully." });
     }
 
     [HttpGet("me")]

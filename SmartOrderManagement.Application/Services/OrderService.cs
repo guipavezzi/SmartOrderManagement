@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using SmartOrderManagement.Application.Dtos;
+using SmartOrderManagement.Application.Interfaces;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Domain.Enums;
 using SmartOrderManagement.Domain.Interfaces.Repositories;
@@ -10,11 +11,14 @@ public class OrderService : IOrderService
     private readonly IOrderRepository _repository;
     private readonly IMenuRepository _menuRepository;
     private readonly IMapper _mapper;
-    public OrderService(IOrderRepository repository, IMenuRepository menuRepository, IMapper mapper)
+    private readonly ICurrentUserService _currentUserService;
+
+    public OrderService(IOrderRepository repository, IMenuRepository menuRepository, IMapper mapper, ICurrentUserService currentUserService)
     {
         _repository = repository;
         _menuRepository = menuRepository;
         _mapper = mapper;
+        _currentUserService = currentUserService;
     }
 
     public async Task<bool> CancelOrderAsync(Guid id)
@@ -47,7 +51,8 @@ public class OrderService : IOrderService
         {
             Table = request.Table,
             Ordered = request.Ordered,
-            Observation = request.Observation
+            Observation = request.Observation,
+            CompanyId = _currentUserService.CompanyId // Vincula o pedido à empresa do usuário logado
         };
         await _repository.AddAsync(order);
         return _mapper.Map<OrderResponse>(order);

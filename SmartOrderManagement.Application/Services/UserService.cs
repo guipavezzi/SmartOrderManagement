@@ -109,4 +109,28 @@ public class UserService : IUserService
             RefreshToken = refreshTokenString
         };
     }
+
+    public async Task<bool> CreateUserAsync(SmartOrderManagement.Application.DTOs.User.CreateUserRequestDto request, Guid companyId)
+    {
+        var existingUser = await _userRepository.GetByEmailAsync(request.Email);
+        if (existingUser != null)
+        {
+            // Email already in use
+            return false;
+        }
+
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+        var user = new User
+        {
+            Name = request.Name,
+            Email = request.Email,
+            Password = passwordHash,
+            CompanyId = companyId,
+            Role = request.Role
+        };
+
+        await _userRepository.AddAsync(user);
+        return true;
+    }
 }
