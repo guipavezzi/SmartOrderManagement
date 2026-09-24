@@ -26,10 +26,10 @@ public class SmartOrderManagementDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Global Query Filters (Aplica o Tenant apenas se NÃO for Admin)
-        modelBuilder.Entity<Order>().HasQueryFilter(e => _currentUserService.Role == UserRole.Admin || e.CompanyId == _currentUserService.CompanyId);
-        modelBuilder.Entity<Menu>().HasQueryFilter(e => _currentUserService.Role == UserRole.Admin || e.CompanyId == _currentUserService.CompanyId);
-        modelBuilder.Entity<User>().HasQueryFilter(e => _currentUserService.Role == UserRole.Admin || e.CompanyId == _currentUserService.CompanyId);
+        // Global Query Filters (Aplica o Tenant para todos os usuários)
+        modelBuilder.Entity<Order>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
+        modelBuilder.Entity<Menu>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
+        modelBuilder.Entity<User>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SmartOrderManagementDbContext).Assembly);
     }

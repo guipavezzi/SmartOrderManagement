@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         var response = await _userService.LoginAsync(request);
         if (response == null)
         {
-            return Unauthorized(new { Message = "Invalid email or password." });
+            return Unauthorized(new { Message = "E-mail ou senha inválidos." });
         }
 
         return Ok(response);
@@ -44,7 +44,7 @@ public class UserController : ControllerBase
         var response = await _userService.RefreshTokenAsync(request);
         if (response == null)
         {
-            return Unauthorized(new { Message = "Invalid or expired refresh token." });
+            return Unauthorized(new { Message = "Token de atualização inválido ou expirado." });
         }
 
         return Ok(response);
@@ -68,10 +68,10 @@ public class UserController : ControllerBase
         var success = await _userService.CreateUserAsync(request, companyId);
         if (!success)
         {
-            return BadRequest(new { Message = "Email already in use." });
+            return BadRequest(new { Message = "E-mail já está em uso." });
         }
 
-        return Created("", new { Message = "User created successfully." });
+        return Created("", new { Message = "Usuário criado com sucesso." });
     }
 
     [HttpGet("me")]

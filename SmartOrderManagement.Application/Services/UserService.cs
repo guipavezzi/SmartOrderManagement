@@ -103,10 +103,13 @@ public class UserService : IUserService
 
         await _userRepository.SaveRefreshTokenAsync(refreshToken);
 
+        var company = await _companyRepository.GetByIdAsync(user.CompanyId);
+
         return new TokenResponseDto
         {
             AccessToken = accessToken,
-            RefreshToken = refreshTokenString
+            RefreshToken = refreshTokenString,
+            CompanyName = company?.Name ?? string.Empty
         };
     }
 
