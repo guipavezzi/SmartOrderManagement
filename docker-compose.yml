@@ -14,5 +14,32 @@ services:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartordermanagement-api
+    ports:
+      - "8080:8080" # Porta da API (No .NET 8 por padrão é 8080)
+    environment:
+      # Passando a string de conexão para a API usar o container do banco.
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=smartordermanagement;Username=postgres;Password=postgres
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  frontend:
+    build:
+      # O context aponta para a pasta do frontend que está um nível acima
+      context: ../smart_order_management_web
+      dockerfile: Dockerfile
+    container_name: smartordermanagement-web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
 volumes:
   postgres-data:
