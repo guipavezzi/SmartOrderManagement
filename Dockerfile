@@ -17,7 +17,7 @@ RUN dotnet build "SmartOrderManagement.API.csproj" -c Release -o /app/build
 
 # Publica a aplicação
 FROM build AS publish
-RUN dotnet publish "SmartOrderManagement.API.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:SelfContained=false
+RUN dotnet publish "SmartOrderManagement.API.csproj" -c Release -o /app/publish
 
 # Etapa 2: Base mais leve apenas com o Runtime (para rodar a aplicação)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
@@ -28,4 +28,4 @@ COPY --from=publish /app/publish .
 EXPOSE 8080
 ENV ASPNETCORE_HTTP_PORTS=8080
 
-ENTRYPOINT ["dotnet", "SmartOrderManagement.API.dll"]
+ENTRYPOINT ["./SmartOrderManagement.API"]
