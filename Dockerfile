@@ -17,7 +17,7 @@ RUN dotnet build "SmartOrderManagement.API.csproj" -c Release -o /app/build
 
 # Publica a aplicação
 FROM build AS publish
-RUN dotnet publish "SmartOrderManagement.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "SmartOrderManagement.API.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:SelfContained=false
 
 # Etapa 2: Base mais leve apenas com o Runtime (para rodar a aplicação)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
