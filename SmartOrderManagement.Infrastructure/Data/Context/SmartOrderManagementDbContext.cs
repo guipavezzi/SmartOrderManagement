@@ -30,6 +30,7 @@ public class SmartOrderManagementDbContext : DbContext
         modelBuilder.Entity<Order>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
         modelBuilder.Entity<Menu>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
         modelBuilder.Entity<User>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
+        modelBuilder.Entity<RefreshToken>().HasQueryFilter(e => e.User.CompanyId == _currentUserService.CompanyId);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SmartOrderManagementDbContext).Assembly);
     }

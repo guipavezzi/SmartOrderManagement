@@ -8,6 +8,9 @@ namespace SmartOrderManagement.Application.Services;
 
 public class UserService : IUserService
 {
+    // Limite temporário de usuários no sistema inteiro
+    private const int MaxUsers = 3;
+
     private readonly IUserRepository _userRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly ITokenService _tokenService;
@@ -28,6 +31,11 @@ public class UserService : IUserService
         if (existingUser != null)
         {
             // Email already in use
+            return null;
+        }
+
+        if (await HasReachedUserLimitAsync())
+        {
             return null;
         }
 
@@ -122,6 +130,11 @@ public class UserService : IUserService
             return false;
         }
 
+        if (await HasReachedUserLimitAsync())
+        {
+            return false;
+        }
+
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
         var user = new User
@@ -135,5 +148,10 @@ public class UserService : IUserService
 
         await _userRepository.AddAsync(user);
         return true;
+    }
+
+    private async Task<bool> HasReachedUserLimitAsync()
+    {
+        return await _userRepository.CountAllAsync() >= MaxUsers;
     }
 }

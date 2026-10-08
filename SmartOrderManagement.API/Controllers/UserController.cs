@@ -68,7 +68,7 @@ public class UserController : ControllerBase
         var success = await _userService.CreateUserAsync(request, companyId);
         if (!success)
         {
-            return BadRequest(new { Message = "E-mail já está em uso." });
+            return BadRequest(new { Message = "Não foi possível criar o usuário." });
         }
 
         return Created("", new { Message = "Usuário criado com sucesso." });

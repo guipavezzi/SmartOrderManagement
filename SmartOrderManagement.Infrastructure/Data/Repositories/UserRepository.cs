@@ -31,6 +31,12 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task<int> CountAllAsync()
+    {
+        // Ignora o filtro de tenant para contar os usuários do sistema inteiro
+        return await _context.Users.IgnoreQueryFilters().CountAsync();
+    }
+
     public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
     {
         return await _context.RefreshTokens
@@ -45,7 +51,7 @@ public class UserRepository : IUserRepository
 
     public async Task RevokeRefreshTokenAsync(string token)
     {
-        var rt = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
+        var rt = await _context.RefreshTokens.IgnoreQueryFilters().FirstOrDefaultAsync(t => t.Token == token);
         if (rt != null)
         {
             rt.IsRevoked = true;
