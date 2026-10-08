@@ -8,8 +8,8 @@ namespace SmartOrderManagement.Application.Services;
 
 public class UserService : IUserService
 {
-    // Limite temporário de usuários no sistema inteiro
-    private const int MaxUsers = 3;
+    // Limite temporário de empresas no sistema inteiro
+    private const int MaxCompanies = 3;
 
     private readonly IUserRepository _userRepository;
     private readonly ICompanyRepository _companyRepository;
@@ -34,7 +34,7 @@ public class UserService : IUserService
             return null;
         }
 
-        if (await HasReachedUserLimitAsync())
+        if (await HasReachedCompanyLimitAsync())
         {
             return null;
         }
@@ -130,11 +130,6 @@ public class UserService : IUserService
             return false;
         }
 
-        if (await HasReachedUserLimitAsync())
-        {
-            return false;
-        }
-
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
         var user = new User
@@ -150,8 +145,8 @@ public class UserService : IUserService
         return true;
     }
 
-    private async Task<bool> HasReachedUserLimitAsync()
+    private async Task<bool> HasReachedCompanyLimitAsync()
     {
-        return await _userRepository.CountAllAsync() >= MaxUsers;
+        return await _companyRepository.CountAllAsync() >= MaxCompanies;
     }
 }

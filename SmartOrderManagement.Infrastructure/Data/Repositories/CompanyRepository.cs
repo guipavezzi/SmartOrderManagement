@@ -25,4 +25,9 @@ public class CompanyRepository : ICompanyRepository
     {
         return await _context.Companies.FirstOrDefaultAsync(c => c.Id == id);
     }
+
+    public async Task<int> CountAllAsync()
+    {
+        return await _context.Companies.IgnoreQueryFilters().CountAsync();
+    }
 }
