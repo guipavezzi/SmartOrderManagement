@@ -1,4 +1,4 @@
-using SmartOrderManagement.Domain.Entities;
+﻿using SmartOrderManagement.Domain.Entities;
 
 namespace SmartOrderManagement.Domain.Interfaces.Repositories;
 

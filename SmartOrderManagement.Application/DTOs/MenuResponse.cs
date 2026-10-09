@@ -1,4 +1,4 @@
-namespace SmartOrderManagement.Application.Dtos;
+﻿namespace SmartOrderManagement.Application.Dtos;
 
 public class MenuResponse
 {

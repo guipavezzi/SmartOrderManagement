@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.EntityFrameworkCore;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Domain.Interfaces.Repositories;

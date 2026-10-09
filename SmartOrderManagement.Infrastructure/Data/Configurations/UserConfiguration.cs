@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartOrderManagement.Domain.Entities;
 
@@ -40,5 +40,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .HasColumnType("timestamp with time zone")
         .IsRequired()
         .HasColumnName("updated_at");
+
+        builder.Property(x => x.CurrentSessionId)
+        .HasColumnName("current_session_id");
     }
 }

@@ -1,4 +1,4 @@
-
+﻿
 using AutoMapper;
 using SmartOrderManagement.Application.Dtos;
 using SmartOrderManagement.Application.Interfaces;
@@ -44,7 +44,7 @@ public class OrderService : IOrderService
 
         if (isDuplicate)
         {
-            throw new Exception("Requisição duplicada bloqueada pelo servidor.");
+            throw new Exception("RequisiÃ§Ã£o duplicada bloqueada pelo servidor.");
         }
 
         Order order = new Order
@@ -52,7 +52,7 @@ public class OrderService : IOrderService
             Table = request.Table,
             Ordered = request.Ordered,
             Observation = request.Observation,
-            CompanyId = _currentUserService.CompanyId // Vincula o pedido à empresa do usuário logado
+            CompanyId = _currentUserService.CompanyId
         };
         await _repository.AddAsync(order);
         return _mapper.Map<OrderResponse>(order);
@@ -75,7 +75,7 @@ public class OrderService : IOrderService
         
         if (!currentOrders.Any())
         {
-            return "Nenhum pedido concluído no expediente atual.";
+            return "Nenhum pedido concluÃ­do no expediente atual.";
         }
 
         var firstOrderDate = currentOrders.OrderBy(o => o.CreatedAt).First().CreatedAt;
@@ -96,7 +96,7 @@ public class OrderService : IOrderService
         Order order = await _repository.GetByIdAsync(id);
         if (order is null)
         {
-            throw new Exception("Pedido não encontrado");
+            throw new Exception("Pedido nÃ£o encontrado");
         }
         order.Table = request.Table;
         order.Ordered = request.Ordered;

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using SmartOrderManagement.Application.Dtos;
 using SmartOrderManagement.Domain.Entities;
 

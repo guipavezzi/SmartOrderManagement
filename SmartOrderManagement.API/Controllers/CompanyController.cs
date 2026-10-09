@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartOrderManagement.Application.DTOs.Auth;
 using SmartOrderManagement.Application.Interfaces;
@@ -33,12 +33,4 @@ public class CompanyController : ControllerBase
         return Created("", response);
     }
 
-    // Example of an authenticated route to get company details later
-    // [HttpGet]
-    // [Authorize]
-    // public async Task<IActionResult> GetMyCompany()
-    // {
-    //      var companyId = _currentUserService.CompanyId;
-    //      // return company details
-    // }
 }

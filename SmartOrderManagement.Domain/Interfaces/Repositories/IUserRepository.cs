@@ -1,4 +1,4 @@
-using SmartOrderManagement.Domain.Entities;
+﻿using SmartOrderManagement.Domain.Entities;
 
 namespace SmartOrderManagement.Domain.Interfaces.Repositories;
 
@@ -11,4 +11,6 @@ public interface IUserRepository
     Task<RefreshToken?> GetRefreshTokenAsync(string token);
     Task SaveRefreshTokenAsync(RefreshToken refreshToken);
     Task RevokeRefreshTokenAsync(string token);
+    Task<Guid?> GetCurrentSessionIdAsync(Guid userId);
+    Task StartNewSessionAsync(Guid userId, Guid sessionId);
 }

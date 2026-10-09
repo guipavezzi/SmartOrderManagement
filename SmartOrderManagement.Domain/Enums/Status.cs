@@ -1,4 +1,4 @@
-namespace SmartOrderManagement.Domain.Enums;
+﻿namespace SmartOrderManagement.Domain.Enums;
 
 public enum Status
 {

@@ -1,4 +1,4 @@
-namespace SmartOrderManagement.Application.DTOs.Auth;
+﻿namespace SmartOrderManagement.Application.DTOs.Auth;
 
 public class TokenResponseDto
 {

@@ -1,4 +1,4 @@
-using SmartOrderManagement.Application.DTOs.Auth;
+﻿using SmartOrderManagement.Application.DTOs.Auth;
 using SmartOrderManagement.Application.Interfaces;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Domain.Enums;
@@ -8,7 +8,6 @@ namespace SmartOrderManagement.Application.Services;
 
 public class UserService : IUserService
 {
-    // Limite temporário de empresas no sistema inteiro
     private const int MaxCompanies = 3;
 
     private readonly IUserRepository _userRepository;
@@ -30,7 +29,6 @@ public class UserService : IUserService
         var existingUser = await _userRepository.GetByEmailAsync(request.Email);
         if (existingUser != null)
         {
-            // Email already in use
             return null;
         }
 
@@ -39,29 +37,28 @@ public class UserService : IUserService
             return null;
         }
 
-        // Create the company first
         var company = new Company
         {
             Name = request.CompanyName
         };
         await _companyRepository.AddAsync(company);
 
-        // Hash the password
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        // Create the user as Admin for this new company
+        var sessionId = Guid.NewGuid();
+
         var user = new User
         {
             Name = request.Name,
             Email = request.Email,
             Password = passwordHash,
             CompanyId = company.Id,
-            Role = UserRole.Admin // First user is the admin/manager of the SaaS
+            Role = UserRole.Admin,
+            CurrentSessionId = sessionId
         };
         await _userRepository.AddAsync(user);
 
-        // Generate tokens
-        return await GenerateTokensAsync(user);
+        return await GenerateTokensAsync(user, sessionId);
     }
 
     public async Task<TokenResponseDto?> LoginAsync(LoginRequestDto request)
@@ -69,43 +66,48 @@ public class UserService : IUserService
         var user = await _userRepository.GetByEmailAsync(request.Email);
         if (user == null) return null;
 
-        // Verify password
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
         if (!isPasswordValid) return null;
 
-        // Generate tokens
-        return await GenerateTokensAsync(user);
+        var sessionId = Guid.NewGuid();
+        await _userRepository.StartNewSessionAsync(user.Id, sessionId);
+        user.CurrentSessionId = sessionId;
+
+        return await GenerateTokensAsync(user, sessionId);
     }
 
     public async Task<TokenResponseDto?> RefreshTokenAsync(RefreshTokenRequestDto request)
     {
-        // 1. Find the refresh token in the DB
         var storedToken = await _userRepository.GetRefreshTokenAsync(request.RefreshToken);
         if (storedToken == null) return null;
 
-        // 2. Check if it's valid
         if (storedToken.IsRevoked || storedToken.ExpiresAt <= DateTime.UtcNow)
         {
             return null;
         }
 
-        // 3. Invalidate the old token
         await _userRepository.RevokeRefreshTokenAsync(request.RefreshToken);
 
-        // 4. Generate new tokens for the user
         var user = storedToken.User;
-        return await GenerateTokensAsync(user);
+        var sessionId = user.CurrentSessionId ?? Guid.NewGuid();
+        if (user.CurrentSessionId == null)
+        {
+            await _userRepository.StartNewSessionAsync(user.Id, sessionId);
+            user.CurrentSessionId = sessionId;
+        }
+
+        return await GenerateTokensAsync(user, sessionId);
     }
 
-    private async Task<TokenResponseDto> GenerateTokensAsync(User user)
+    private async Task<TokenResponseDto> GenerateTokensAsync(User user, Guid sessionId)
     {
-        var accessToken = _tokenService.GenerateToken(user.Id.ToString(), user.Email, user.CompanyId.ToString(), user.Role);
+        var accessToken = _tokenService.GenerateToken(user.Id.ToString(), user.Email, user.CompanyId.ToString(), user.Role, sessionId.ToString());
         var refreshTokenString = _tokenService.GenerateRefreshToken();
 
         var refreshToken = new RefreshToken
         {
             Token = refreshTokenString,
-            ExpiresAt = DateTime.UtcNow.AddDays(7), // Expirar em 7 dias
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
             UserId = user.Id
         };
 
@@ -126,7 +128,6 @@ public class UserService : IUserService
         var existingUser = await _userRepository.GetByEmailAsync(request.Email);
         if (existingUser != null)
         {
-            // Email already in use
             return false;
         }
 

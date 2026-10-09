@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartOrderManagement.Domain.Entities;
 
@@ -29,7 +29,6 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .HasColumnName("UpdatedAt")
             .HasColumnType("timestamp with time zone");
 
-        // Relacionamentos já estão configurados por convenção, mas se quiser deixar explícito:
         builder.HasMany(c => c.Users)
             .WithOne(u => u.Company)
             .HasForeignKey(u => u.CompanyId)

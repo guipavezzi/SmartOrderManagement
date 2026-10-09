@@ -1,4 +1,4 @@
-using SmartOrderManagement.Domain.Enums;
+﻿using SmartOrderManagement.Domain.Enums;
 
 namespace SmartOrderManagement.Application.Dtos;
 public class OrderResponse

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartOrderManagement.Application.Mappings;
 using SmartOrderManagement.Domain.Interfaces.Repositories;
 using SmartOrderManagement.Infrastructure.Data.Context;
@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowTauriAndAngular", policy =>
     {
-        policy.SetIsOriginAllowed(origin => true) // Permite qualquer origem com credenciais
+        policy.SetIsOriginAllowed(origin => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -60,6 +60,36 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!))
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var userRepo = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                var userIdClaim = context.Principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                               ?? context.Principal?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+                var sessionIdClaim = context.Principal?.FindFirst("SessionId")?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || string.IsNullOrEmpty(sessionIdClaim))
+                {
+                    context.Fail("Token nÃ£o contÃ©m identificador de sessÃ£o vÃ¡lido.");
+                    return;
+                }
+
+                if (Guid.TryParse(userIdClaim, out var userId) && Guid.TryParse(sessionIdClaim, out var tokenSessionId))
+                {
+                    var currentSessionId = await userRepo.GetCurrentSessionIdAsync(userId);
+                    if (currentSessionId == null || currentSessionId != tokenSessionId)
+                    {
+                        context.Fail("SessÃ£o desconectada: novo login realizado em outro dispositivo.");
+                    }
+                }
+                else
+                {
+                    context.Fail("Identificadores de sessÃ£o invÃ¡lidos.");
+                }
+            }
+        };
     });
 builder.Services.AddAuthorization();
 
@@ -83,7 +113,6 @@ await using (var scope = app.Services.CreateAsyncScope())
     await dbContext.Database.MigrateAsync();
 }
 
-// app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 

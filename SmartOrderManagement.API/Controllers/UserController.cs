@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartOrderManagement.Application.DTOs.Auth;
 using SmartOrderManagement.Application.Interfaces;
@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         var response = await _userService.LoginAsync(request);
         if (response == null)
         {
-            return Unauthorized(new { Message = "E-mail ou senha inválidos." });
+            return Unauthorized(new { Message = "E-mail ou senha invÃ¡lidos." });
         }
 
         return Ok(response);
@@ -44,22 +44,20 @@ public class UserController : ControllerBase
         var response = await _userService.RefreshTokenAsync(request);
         if (response == null)
         {
-            return Unauthorized(new { Message = "Token de atualização inválido ou expirado." });
+            return Unauthorized(new { Message = "Token de atualizaÃ§Ã£o invÃ¡lido ou expirado." });
         }
 
         return Ok(response);
     }
 
     [HttpPost]
-    [Authorize] // Requires authentication to get the CompanyId from the JWT
+    [Authorize]
     public async Task<IActionResult> CreateUser([FromBody] SmartOrderManagement.Application.DTOs.User.CreateUserRequestDto request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        // Get the CompanyId from the currently logged in user (the Admin creating the employee)
         var companyId = _currentUserService.CompanyId;
 
-        // Optionally check if the current user is an Admin
         if (_currentUserService.Role != SmartOrderManagement.Domain.Enums.UserRole.Admin)
         {
             return Forbid();
@@ -68,10 +66,10 @@ public class UserController : ControllerBase
         var success = await _userService.CreateUserAsync(request, companyId);
         if (!success)
         {
-            return BadRequest(new { Message = "Não foi possível criar o usuário." });
+            return BadRequest(new { Message = "NÃ£o foi possÃ­vel criar o usuÃ¡rio." });
         }
 
-        return Created("", new { Message = "Usuário criado com sucesso." });
+        return Created("", new { Message = "UsuÃ¡rio criado com sucesso." });
     }
 
     [HttpGet("me")]

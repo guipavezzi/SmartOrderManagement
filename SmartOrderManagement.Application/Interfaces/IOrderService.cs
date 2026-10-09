@@ -1,4 +1,4 @@
-using SmartOrderManagement.Application.Dtos;
+﻿using SmartOrderManagement.Application.Dtos;
 using SmartOrderManagement.Domain.Enums;
 
 public interface IOrderService

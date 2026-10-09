@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Domain.Interfaces.Repositories;
 using SmartOrderManagement.Infrastructure.Data.Context;
@@ -33,7 +33,6 @@ public class UserRepository : IUserRepository
 
     public async Task<int> CountAllAsync()
     {
-        // Ignora o filtro de tenant para contar os usuários do sistema inteiro
         return await _context.Users.IgnoreQueryFilters().CountAsync();
     }
 
@@ -57,6 +56,29 @@ public class UserRepository : IUserRepository
             rt.IsRevoked = true;
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<Guid?> GetCurrentSessionIdAsync(Guid userId)
+    {
+        return await _context.Users
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(u => u.Id == userId)
+            .Select(u => u.CurrentSessionId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task StartNewSessionAsync(Guid userId, Guid sessionId)
+    {
+        await _context.RefreshTokens
+            .IgnoreQueryFilters()
+            .Where(rt => rt.UserId == userId && !rt.IsRevoked)
+            .ExecuteUpdateAsync(s => s.SetProperty(rt => rt.IsRevoked, true));
+
+        await _context.Users
+            .IgnoreQueryFilters()
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.CurrentSessionId, sessionId));
     }
 }
 

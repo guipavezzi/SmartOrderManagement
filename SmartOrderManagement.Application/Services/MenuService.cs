@@ -1,4 +1,4 @@
-
+﻿
 using AutoMapper;
 using SmartOrderManagement.Application.Dtos;
 using SmartOrderManagement.Application.Interfaces;
@@ -25,7 +25,7 @@ public class MenuService : IMenuService
             Name = request.Name,
             MinPreparationTimeInMinutes = request.MinPreparationTimeInMinutes,
             MaxPreparationTimeInMinutes = request.MaxPreparationTimeInMinutes,
-            CompanyId = _currentUserService.CompanyId // Vincula o menu à empresa do usuário logado
+            CompanyId = _currentUserService.CompanyId
         };
         await _repository.AddAsync(menu);
         return _mapper.Map<MenuResponse>(menu);

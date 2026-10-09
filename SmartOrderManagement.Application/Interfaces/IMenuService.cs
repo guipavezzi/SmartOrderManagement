@@ -1,4 +1,4 @@
-using SmartOrderManagement.Application.Dtos;
+﻿using SmartOrderManagement.Application.Dtos;
 
 public interface IMenuService
 {

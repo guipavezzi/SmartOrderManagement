@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,7 +18,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(string userId, string email, string companyId, UserRole role)
+    public string GenerateToken(string userId, string email, string companyId, UserRole role, string sessionId)
     {
         var jwtKey = _configuration["Jwt:Key"];
         var jwtIssuer = _configuration["Jwt:Issuer"];
@@ -33,6 +33,7 @@ public class TokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Email, email),
             new Claim("CompanyId", companyId),
             new Claim(ClaimTypes.Role, role.ToString()),
+            new Claim("SessionId", sessionId),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -40,7 +41,7 @@ public class TokenService : ITokenService
             issuer: jwtIssuer,
             audience: jwtAudience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(2), // Token válido por 2 horas
+            expires: DateTime.UtcNow.AddHours(2),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

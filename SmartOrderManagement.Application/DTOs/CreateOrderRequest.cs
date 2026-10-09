@@ -1,4 +1,4 @@
-public class CreateOrderRequest
+﻿public class CreateOrderRequest
 {
     public int Table { get; set; }
     public string Ordered { get; set; }

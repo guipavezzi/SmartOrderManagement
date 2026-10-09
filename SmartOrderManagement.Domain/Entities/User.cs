@@ -1,4 +1,4 @@
-using SmartOrderManagement.Domain.Enums;
+﻿using SmartOrderManagement.Domain.Enums;
 
 namespace SmartOrderManagement.Domain.Entities;public class User
 {
@@ -9,6 +9,8 @@ namespace SmartOrderManagement.Domain.Entities;public class User
     public UserRole Role { get; set; } = UserRole.User;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
+
+    public Guid? CurrentSessionId { get; set; }
 
     public Guid CompanyId { get; set; }
     public Company Company { get; set; }

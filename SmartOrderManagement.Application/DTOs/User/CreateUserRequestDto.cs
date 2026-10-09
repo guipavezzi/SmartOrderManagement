@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using SmartOrderManagement.Domain.Enums;
 
 namespace SmartOrderManagement.Application.DTOs.User;

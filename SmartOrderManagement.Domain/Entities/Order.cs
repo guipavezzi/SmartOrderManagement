@@ -1,4 +1,4 @@
-namespace SmartOrderManagement.Domain.Entities;
+﻿namespace SmartOrderManagement.Domain.Entities;
 
 using SmartOrderManagement.Domain.Enums;
 

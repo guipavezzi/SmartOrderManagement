@@ -1,4 +1,4 @@
-using SmartOrderManagement.Application.DTOs.Auth;
+﻿using SmartOrderManagement.Application.DTOs.Auth;
 
 namespace SmartOrderManagement.Application.Interfaces;
 

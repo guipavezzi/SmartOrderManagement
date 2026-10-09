@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using SmartOrderManagement.Application.Interfaces;
 using SmartOrderManagement.Domain.Enums;

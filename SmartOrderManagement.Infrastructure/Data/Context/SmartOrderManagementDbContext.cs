@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartOrderManagement.Application.Interfaces;
 using SmartOrderManagement.Domain.Entities;
 using SmartOrderManagement.Domain.Enums;
@@ -26,7 +26,6 @@ public class SmartOrderManagementDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Global Query Filters (Aplica o Tenant para todos os usuários)
         modelBuilder.Entity<Order>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
         modelBuilder.Entity<Menu>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
         modelBuilder.Entity<User>().HasQueryFilter(e => e.CompanyId == _currentUserService.CompanyId);
