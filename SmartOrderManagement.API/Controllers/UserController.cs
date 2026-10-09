@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartOrderManagement.Application.DTOs.Auth;
 using SmartOrderManagement.Application.Interfaces;
@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         var response = await _userService.LoginAsync(request);
         if (response == null)
         {
-            return Unauthorized(new { Message = "E-mail ou senha invÃ¡lidos." });
+            return Unauthorized(new { Message = "E-mail ou senha inválidos." });
         }
 
         return Ok(response);
@@ -44,7 +44,7 @@ public class UserController : ControllerBase
         var response = await _userService.RefreshTokenAsync(request);
         if (response == null)
         {
-            return Unauthorized(new { Message = "Token de atualizaÃ§Ã£o invÃ¡lido ou expirado." });
+            return Unauthorized(new { Message = "Token de atualização inválido ou expirado." });
         }
 
         return Ok(response);
@@ -66,10 +66,10 @@ public class UserController : ControllerBase
         var success = await _userService.CreateUserAsync(request, companyId);
         if (!success)
         {
-            return BadRequest(new { Message = "NÃ£o foi possÃ­vel criar o usuÃ¡rio." });
+            return BadRequest(new { Message = "Não foi possível criar o usuário." });
         }
 
-        return Created("", new { Message = "UsuÃ¡rio criado com sucesso." });
+        return Created("", new { Message = "Usuário criado com sucesso." });
     }
 
     [HttpGet("me")]

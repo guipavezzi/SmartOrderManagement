@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmartOrderManagement.Application.Mappings;
 using SmartOrderManagement.Domain.Interfaces.Repositories;
 using SmartOrderManagement.Infrastructure.Data.Context;
@@ -72,7 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
                 if (string.IsNullOrEmpty(userIdClaim) || string.IsNullOrEmpty(sessionIdClaim))
                 {
-                    context.Fail("Token nÃ£o contÃ©m identificador de sessÃ£o vÃ¡lido.");
+                    context.Fail("Token não contém identificador de sessão válido.");
                     return;
                 }
 
@@ -81,12 +81,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     var currentSessionId = await userRepo.GetCurrentSessionIdAsync(userId);
                     if (currentSessionId == null || currentSessionId != tokenSessionId)
                     {
-                        context.Fail("SessÃ£o desconectada: novo login realizado em outro dispositivo.");
+                        context.Fail("Sessão desconectada: novo login realizado em outro dispositivo.");
                     }
                 }
                 else
                 {
-                    context.Fail("Identificadores de sessÃ£o invÃ¡lidos.");
+                    context.Fail("Identificadores de sessão inválidos.");
                 }
             }
         };
